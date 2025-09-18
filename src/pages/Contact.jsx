@@ -288,7 +288,7 @@ const WEB3FORMS_ACCESS_KEY = 'YOUR_ACCESS_KEY'; // Get free key from web3forms.c
 // Option 1: EmailJS (requires setup - see EMAILJS_SETUP.md)
 const EMAILJS_SERVICE_ID = 'service_f0y2s79'; // Gmail Service ID
 const EMAILJS_TEMPLATE_ID = 'template_i8ix4cy'; // Template ID from the dashboard
-const EMAILJS_PUBLIC_KEY = 'qK4T0Z9HfKSxRhIva'; // Public Key
+const EMAILJS_PUBLIC_KEY = 'qK4T0Z9HfKSxRhlva'; // Public Key
 
 // Option 2: Formspree (easier setup - just replace with your form endpoint)
 const FORMSPREE_ENDPOINT = 'https://formspree.io/f/YOUR_FORM_ID';
@@ -317,20 +317,36 @@ export default function Contact() {
     setSubmitStatus(null);
 
     try {
-      // Simple mailto solution that works immediately
-      const subject = encodeURIComponent(`Message from ${formData.name}`);
-      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
-      
-      // Open email client
-      window.open(`mailto:${cvData.email}?subject=${subject}&body=${body}`);
-      
-      // Log the message for immediate viewing
-      console.log('📧 NEW MESSAGE RECEIVED:');
-      console.log('Name:', formData.name);
-      console.log('Email:', formData.email);
-      console.log('Message:', formData.message);
-      console.log('Time:', new Date().toLocaleString());
-      console.log('---');
+      // EmailJS - sends directly to your email inbox
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_email: cvData.email,
+        reply_to: formData.email
+      };
+
+      console.log('📧 Sending email via EmailJS...', {
+        serviceId: EMAILJS_SERVICE_ID,
+        templateId: EMAILJS_TEMPLATE_ID,
+        publicKey: EMAILJS_PUBLIC_KEY,
+        templateParams
+      });
+
+      // Check if EmailJS is properly configured
+      if (EMAILJS_PUBLIC_KEY === 'qK4T0Z9HfKSxRhIva' || EMAILJS_PUBLIC_KEY === 'your_public_key') {
+        throw new Error('EmailJS Public Key not configured. Please update EMAILJS_PUBLIC_KEY in Contact.jsx');
+      }
+
+      const result = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('✅ EmailJS result:', result);
+      console.log('📧 Message sent to your email inbox!');
       
       // Show success message
       await new Promise(resolve => setTimeout(resolve, 500));
@@ -338,8 +354,27 @@ export default function Contact() {
       setSubmitStatus('success');
       setFormData({ name: '', email: '', message: '' }); // Reset form
     } catch (error) {
-      console.error('Email Error:', error);
-      setSubmitStatus('error');
+      console.error('EmailJS Error:', error);
+      
+      // Fallback: Use mailto if EmailJS fails
+      console.log('🔄 EmailJS failed, using mailto fallback...');
+      const subject = encodeURIComponent(`Message from ${formData.name}`);
+      const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`);
+      
+      // Open email client as fallback
+      window.open(`mailto:${cvData.email}?subject=${subject}&body=${body}`);
+      
+      // Log the message for immediate viewing
+      console.log('📧 NEW MESSAGE RECEIVED (Fallback):');
+      console.log('Name:', formData.name);
+      console.log('Email:', formData.email);
+      console.log('Message:', formData.message);
+      console.log('Time:', new Date().toLocaleString());
+      console.log('---');
+      
+      // Show success message for fallback
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', message: '' }); // Reset form
     } finally {
       setIsSubmitting(false);
     }
