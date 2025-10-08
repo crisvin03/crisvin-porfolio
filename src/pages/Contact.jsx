@@ -37,7 +37,7 @@ const cvData = {
     {
       role: "Full-Stack Developer",
       company: "Freelance / Open Source",
-      period: "2021 — Present",
+      period: "2022 — Present",
       bullets: [
         "Built websites, internal tools, and APIs for small businesses.",
         "React/Next.js UIs with Tailwind & motion; accessible, responsive interfaces.",

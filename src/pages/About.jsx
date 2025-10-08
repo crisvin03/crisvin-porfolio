@@ -20,7 +20,7 @@ const highlights = [
 const timeline = [
   {
     title: "Building Real Applications",
-    period: "2021 — Present",
+    period: "2022 — Present",
     points: [
       "Created lms-SorSU-BC: Learning Management System for my university using React, Node.js, Express, and MongoDB.",
       "Developed StoreMe: Inventory management app with React, Vite, Tailwind, and Firebase for small businesses.",
@@ -30,7 +30,7 @@ const timeline = [
   },
   {
     title: "Full-Stack Development Journey",
-    period: "2021 — Present",
+    period: "2022 — Present",
     points: [
       "Mastered React/Next.js with Tailwind CSS and Framer Motion for modern, accessible UIs.",
       "Built robust backends with Node.js/Express, PHP/Laravel, and multiple databases (PostgreSQL, MongoDB, MySQL).",
