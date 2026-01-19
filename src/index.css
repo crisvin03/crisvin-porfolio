@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html, body { 
+  background:#070b15; 
+  color:#e5e7eb; 
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+* {
+  box-sizing: border-box;
+}
